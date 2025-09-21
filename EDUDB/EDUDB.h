@@ -22,10 +22,11 @@ typedef struct  {
 typedef struct  {
     COL_TYPE MEMORY_TYPE;
     void *DATA;
-}MEMORY;
+}DATA;
 
-int init_memory();
-int create_table();
+int init_memory(DATA ***memorys, unsigned int column_size, unsigned int row_size);
+int define_column(COLUMN **column, char *column_name, COL_TYPE column_type, int key, int not_null);
+int create_table(TABLE **table, char *table_name, COLUMN*columns, unsigned int columns_size);
 
-int add_daa();
-int get_data();
+int add_daa(TABLE *table, COLUMN *datas);
+int get_data(TABLE *table, DATA *key, DATA **dest);
