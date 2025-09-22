@@ -1,32 +1,36 @@
 #pragma once
+#include <stdbool.h>
+#include <stdlib.h>
 
+typedef enum {
+    COL_TYPE_TEXT,
+    COL_TYPE_FLOAT
+} COL_TYPE;
 
-typedef enum _COL_TYPE_ {
-    TEXT,
-    FLOAT
-}COL_TYPE;
-
-typedef struct  {
+typedef struct {
     COL_TYPE TYPE;
-    char *COLUMN_NAME;
-    int KEY;   //key : 1, not key : 0
-    int NOTNULL; //allow null : 0, not allow null : 1
-}COLUMN;
+    const char *COLUMN_NAME;
+    bool KEY;     
+    bool NOTNULL;
+} COLUMN;
 
-typedef struct  {
-    char *TABLE_NAME;
-    unsigned int COLUMNS_SIZE;
+typedef struct {
+    const char *TABLE_NAME;
+    size_t COLUMNS_SIZE;
     COLUMN *COLUMNS;
-}TABLE;
+} TABLE;
 
-typedef struct  {
+typedef struct {
     COL_TYPE MEMORY_TYPE;
-    void *DATA;
-}DATA;
+    union {
+        char *TEXT;
+        float FLOAT_VALUE;
+    } VALUE;
+} DATA;
 
-int init_memory(DATA ***memorys, unsigned int column_size, unsigned int row_size);
-int define_column(COLUMN **column, char *column_name, COL_TYPE column_type, int key, int not_null);
-int create_table(TABLE **table, char *table_name, COLUMN*columns, unsigned int columns_size);
+int init_memory(DATA ***memorys, size_t column_size, size_t row_size);
+int define_column(COLUMN **column, const char *column_name, COL_TYPE column_type, bool key, bool not_null);
+int create_table(TABLE **table, const char *table_name, COLUMN *columns, size_t columns_size);
 
-int add_daa(TABLE *table, COLUMN *datas);
+int add_data(TABLE *table, DATA *datas);
 int get_data(TABLE *table, DATA *key, DATA **dest);
